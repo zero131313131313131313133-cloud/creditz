@@ -258,21 +258,48 @@ function FilmCard({
   const [providers, setProviders] =
     useState(null);
 
-  const loadProviders = async () => {
+const loadProviders = async () => {
 
-    if (providers) return;
+  setProviders({
 
-    const mediaType =
-      film.media_type;
+    KR: {
+      flatrate: [
+        { provider_id: 1, provider_name: "Netflix" },
+        { provider_id: 2, provider_name: "Watcha" },
+        { provider_id: 3, provider_name: "wavve" }
+      ]
+    },
 
-    const res = await fetch(
-      `https://api.themoviedb.org/3/${mediaType}/${film.id}/watch/providers?api_key=${apiKey}`
-    );
+    JP: {
+      flatrate: [
+        { provider_id: 1, provider_name: "Netflix" },
+        { provider_id: 2, provider_name: "Disney Plus" }
+      ]
+    },
 
-    const data = await res.json();
+    US: {
+      flatrate: [
+        { provider_id: 1, provider_name: "Netflix" },
+        { provider_id: 2, provider_name: "Hulu" }
+      ]
+    },
 
-    setProviders(data.results);
-  };
+    CN: {
+      flatrate: [
+        { provider_id: 1, provider_name: "iQIYI" }
+      ]
+    },
+
+    VN: {
+      flatrate: [
+        { provider_id: 1, provider_name: "VIU" },
+        { provider_id: 2, provider_name: "Netflix" }
+      ]
+    }
+
+  });
+
+};
 
   return (
 
