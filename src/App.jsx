@@ -389,10 +389,9 @@ const loadProviders = async () => {
                         {
                           logo ? (
 
-                            <img
-                              src={logo}
-                              className="ott-logo"
-                            />
+                            <div className="ott-badge">
+  {p.provider_name}
+</div>
 
                           ) : (
 

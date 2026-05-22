@@ -246,3 +246,21 @@ select {
   }
 
 }
+
+.ott-badge {
+
+  background: #e50914;
+
+  color: white;
+
+  padding: 8px 14px;
+
+  border-radius: 999px;
+
+  font-size: 13px;
+
+  font-weight: 600;
+
+  display: inline-block;
+
+}
