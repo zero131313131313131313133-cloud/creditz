@@ -2,14 +2,15 @@ import { useState } from "react";
 import "./App.css";
 
 const countryNames = {
-  KR: "한국",
-  JP: "일본",
-  US: "미국",
-  CN: "중국",
-  VN: "베트남"
+  KR: "🇰🇷",
+  JP: "🇯🇵",
+  US: "🇺🇸",
+  CN: "🇨🇳",
+  VN: "🇻🇳"
 };
 
 export default function App() {
+
   const [query, setQuery] = useState("");
   const [actor, setActor] = useState(null);
   const [films, setFilms] = useState([]);
@@ -21,24 +22,29 @@ export default function App() {
     import.meta.env.VITE_TMDB_API_KEY;
 
   const searchActor = async () => {
+
     if (!query) return;
 
     setLoading(true);
 
     try {
+
       // 배우 검색
       const actorRes = await fetch(
         `https://api.themoviedb.org/3/search/person?api_key=${API_KEY}&query=${query}&language=ko-KR`
       );
 
-      const actorData = await actorRes.json();
+      const actorData =
+        await actorRes.json();
 
       const selectedActor =
         actorData.results[0];
 
       if (!selectedActor) {
+
         alert("배우를 찾을 수 없습니다.");
         return;
+
       }
 
       // 배우 상세
@@ -49,14 +55,16 @@ export default function App() {
       let detailData =
         await detailRes.json();
 
-      // 소개 없으면 영어 데이터 가져오기
+      // 소개 없으면 영어 데이터
       if (!detailData.biography) {
+
         const engRes = await fetch(
           `https://api.themoviedb.org/3/person/${selectedActor.id}?api_key=${API_KEY}&language=en-US`
         );
 
         detailData =
           await engRes.json();
+
       }
 
       // 이름은 한국어 유지
@@ -67,6 +75,7 @@ export default function App() {
 
       // 소개 번역
       if (detailData.biography) {
+
         const translated =
           await fetch(
             `https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl=ko&dt=t&q=${encodeURIComponent(detailData.biography)}`
@@ -81,9 +90,14 @@ export default function App() {
             .join("");
 
         setTranslatedBio(result);
+
+      } else {
+
+        setTranslatedBio("");
+
       }
 
-      // 필모그래피
+      // 필모
       const creditRes = await fetch(
         `https://api.themoviedb.org/3/person/${selectedActor.id}/combined_credits?api_key=${API_KEY}&language=ko-KR`
       );
@@ -128,9 +142,13 @@ export default function App() {
             setQuery(e.target.value)
           }
           onKeyDown={(e) => {
+
             if (e.key === "Enter") {
+
               searchActor();
+
             }
+
           }}
         />
 
@@ -172,7 +190,11 @@ export default function App() {
       {loading && (
 
         <div className="loading">
-          <p>불러오는 중...</p>
+
+          <p>
+            불러오는 중...
+          </p>
+
         </div>
 
       )}
@@ -260,14 +282,13 @@ function FilmCard({
     setProviders(data.results);
   };
 
-  // 선택 국가 + 한국 OTT 같이 표시
   const selectedProviders =
     providers?.[country];
 
   const koreanProviders =
     providers?.KR;
 
-  const providerList = [
+  const allProviders = [
 
     ...(selectedProviders?.flatrate || []),
     ...(selectedProviders?.rent || []),
@@ -285,7 +306,7 @@ function FilmCard({
 
   // 중복 제거
   const uniqueProviders =
-    providerList.filter(
+    allProviders.filter(
       (provider, index, self) =>
         index ===
         self.findIndex(
@@ -308,7 +329,9 @@ function FilmCard({
       {featured && (
 
         <div className="featured-badge">
+
           대표작
+
         </div>
 
       )}
@@ -328,8 +351,10 @@ function FilmCard({
 
       <p className="character">
 
-        {film.character ||
-          "배역 정보 없음"}
+        {
+          film.character ||
+          "배역 정보 없음"
+        }
 
       </p>
 
@@ -349,28 +374,44 @@ function FilmCard({
 
       {uniqueProviders.length > 0 && (
 
-        <div className="ott-box">
+        <div className="ott-list">
 
-          <p>
-            {countryNames[country]} OTT
-          </p>
+          {uniqueProviders.map((p) => {
 
-          <div className="ott-list">
+            const isKorean =
+              koreanProviders &&
+              [
+                ...(koreanProviders.flatrate || []),
+                ...(koreanProviders.rent || []),
+                ...(koreanProviders.buy || [])
+              ].some(
+                (kp) =>
+                  kp.provider_id ===
+                  p.provider_id
+              );
 
-            {uniqueProviders.map((p) => (
+            return (
 
               <div
                 className="ott-badge"
                 key={p.provider_id}
               >
 
+                {
+                  isKorean
+                    ? "🇰🇷"
+                    : countryNames[country]
+                }
+
+                {" "}
+
                 {p.provider_name}
 
               </div>
 
-            ))}
+            );
 
-          </div>
+          })}
 
         </div>
 
