@@ -93,8 +93,13 @@ select {
 }
 
 .actor-profile h2 {
+
+  color: white;
+
   font-size: 42px;
-  margin-bottom: 10px;
+
+  font-weight: 700;
+
 }
 
 .biography {

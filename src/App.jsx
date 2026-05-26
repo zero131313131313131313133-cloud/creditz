@@ -258,9 +258,33 @@ function FilmCard({
   const [providers, setProviders] =
     useState(null);
 
-const loadProviders = async () => {
+  const loadProviders = async () => {
 
-  setProviders({
+  if (providers) return;
+
+  try {
+
+    const mediaType = film.media_type;
+
+    const res = await fetch(
+      `https://api.themoviedb.org/3/${mediaType}/${film.id}/watch/providers?api_key=${apiKey}`
+    );
+
+    const data = await res.json();
+
+    if (data.results) {
+
+      setProviders(data.results);
+
+    }
+
+  } catch (error) {
+
+    console.error(error);
+
+  }
+
+};
 
     KR: {
       flatrate: [
@@ -358,62 +382,43 @@ const loadProviders = async () => {
       </button>
 
       {
-        providers &&
-        providers[country] &&
-        providers[country].flatrate && (
+       {
+  providers &&
+  providers[country] &&
+  (
+    providers[country].flatrate ||
+    providers[country].rent ||
+    providers[country].buy
+  ) && (
 
-          <div className="ott-box">
+    <div className="ott-box">
 
-            <p>
-              {countryNames[country]}
-              {" "}
-              OTT
-            </p>
+      <p>
+        {countryNames[country]} OTT
+      </p>
 
-            <div className="ott-logos">
+      <div className="ott-logos">
 
-              {
-                providers[country]
-                  .flatrate
-                  .map((p) => {
+        {
+          (
+            providers[country].flatrate ||
+            providers[country].rent ||
+            providers[country].buy
+          ).map((p) => (
 
-                    const logo =
-                      ottLogos[
-                        p.provider_name
-                      ];
-
-                    return (
-
-                      <div key={p.provider_id}>
-
-                        {
-                          logo ? (
-
-                            <div className="ott-badge">
-  {p.provider_name}
-</div>
-
-                          ) : (
-
-                            <span>
-                              {p.provider_name}
-                            </span>
-
-                          )
-                        }
-
-                      </div>
-                    );
-                  })
-              }
-
+            <div
+              key={p.provider_id}
+              className="ott-badge"
+            >
+              {p.provider_name}
             </div>
 
-          </div>
+          ))
+        }
 
-        )
-      }
+      </div>
 
     </div>
-  );
+
+  )
 }
