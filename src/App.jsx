@@ -349,14 +349,24 @@ function FilmCard({
         {film.title || film.name}
       </h3>
 
-      <p className="character">
+  {
+  film.character &&
+  film.character !== "Self" &&
+  film.character !== "Himself" &&
+  film.character !== "Herself" && (
 
-        {
-          film.character ||
-          "배역 정보 없음"
-        }
+    <p className="character">
 
-      </p>
+      <strong>배역:</strong>
+
+      {" "}
+
+      {film.character}
+
+    </p>
+
+  )
+}
 
       {
   film.overview &&
