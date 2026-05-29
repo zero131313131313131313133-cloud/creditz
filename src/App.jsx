@@ -358,15 +358,18 @@ function FilmCard({
 
       </p>
 
-      <p className="overview">
+      {
+  film.overview &&
+  film.overview.length > 30 && (
 
-        {
-          film.overview
-            ? film.overview.slice(0, 120)
-            : "줄거리 정보 없음"
-        }
+    <p className="overview">
 
-      </p>
+      {film.overview.slice(0, 120)}
+
+    </p>
+
+  )
+}
 
       <button onClick={loadProviders}>
         OTT 보기
