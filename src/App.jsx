@@ -336,14 +336,14 @@ function FilmCard({
 
       )}
 
-      {film.poster_path && (
-
-        <img
-          src={`https://image.tmdb.org/t/p/w500${film.poster_path}`}
-          className="poster"
-        />
-
-      )}
+    <img
+  src={
+    film.poster_path
+      ? `https://image.tmdb.org/t/p/w500${film.poster_path}`
+      : "https://dummyimage.com/500x750/1a1a1a/ffffff&text=NO+IMAGE"
+  }
+  className="poster"
+/>
 
       <h3>
         {film.title || film.name}
